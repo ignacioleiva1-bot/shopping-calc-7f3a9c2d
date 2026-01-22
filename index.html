@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Shopping USA - Calc</title>
+  <title>Shopping USA - Calculadora</title>
 
   <style>
     :root{
@@ -27,7 +27,7 @@
                   var(--bg);
       color:var(--text);
     }
-    .wrap{ max-width: 820px; margin: 0 auto; padding: 18px; }
+    .wrap{ max-width: 860px; margin: 0 auto; padding: 18px; }
     header{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin: 6px 0 12px; }
     h1{ font-size: 22px; margin:0; letter-spacing:.2px; }
     .pill{ font-size:14px; color:var(--muted); border:1px solid var(--border); padding:8px 12px; border-radius:999px; white-space: nowrap; }
@@ -61,7 +61,7 @@
     }
 
     .grid{ display:grid; gap:12px; }
-    @media(min-width:820px){ .grid{ grid-template-columns: 1fr 1fr; } }
+    @media(min-width:880px){ .grid{ grid-template-columns: 1fr 1fr; } }
 
     .card{
       background: rgba(15,26,46,.92);
@@ -75,7 +75,7 @@
 
     label{ display:block; font-size:14px; color: var(--muted); margin: 12px 0 7px; line-height: 1.2; }
 
-    input, select{
+    input{
       width:100%;
       padding: 14px 12px;
       border-radius: 12px;
@@ -87,7 +87,7 @@
       -webkit-appearance: none;
       appearance: none;
     }
-    input:focus, select:focus{
+    input:focus{
       border-color: rgba(45,212,191,.55);
       box-shadow: 0 0 0 4px rgba(45,212,191,.12);
     }
@@ -114,7 +114,7 @@
     .kpi{ display:flex; justify-content:space-between; gap:12px; padding:12px 0; border-bottom:1px solid var(--border); align-items: baseline; }
     .kpi:last-child{ border-bottom:0; }
     .kpi .name{ color: var(--muted); font-size: 14px; }
-    .kpi .val{ font-variant-numeric: tabular-nums; font-size: 17px; }
+    .kpi .val{ font-variant-numeric: tabular-nums; font-size: 17px; text-align:right; }
 
     .kpi.total{
       margin-top: 8px;
@@ -137,10 +137,159 @@
     .cartMeta{ color: var(--muted); font-size: 13px; margin-top: 6px; line-height: 1.25; }
     .cartActions{ display:flex; gap:8px; flex-wrap: wrap; justify-content:flex-end; align-items:center; }
     .miniBtn{ padding: 10px 12px; border-radius: 12px; font-size: 14px; font-weight: 800; flex: 0 0 auto; }
+
+    /* Drawer Balance */
+    .drawerOverlay{
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.45);
+      backdrop-filter: blur(2px);
+      display: none;
+      z-index: 50;
+    }
+    .drawerOverlay.open{ display:block; }
+
+    .drawer{
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: min(460px, 94vw);
+      height: 100vh;
+      background: rgba(15,26,46,.98);
+      border-left: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      transform: translateX(110%);
+      transition: transform .22s ease;
+      z-index: 60;
+      padding: 14px;
+      overflow: auto;
+    }
+    .drawer.open{ transform: translateX(0); }
+
+    .drawerHeader{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom: 6px;
+      position: sticky;
+      top: 0;
+      background: rgba(15,26,46,.98);
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+    .drawerTitle{
+      margin:0;
+      font-size: 18px;
+      font-weight: 900;
+      color: #d6e3ff;
+    }
+
+    .history{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      margin-top: 10px;
+    }
+    .historyItem{
+      border:1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px;
+      background: rgba(255,255,255,.03);
+    }
+    .historyTop{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      align-items:flex-start;
+    }
+    .historyTitle{
+      font-weight: 900;
+      font-size: 14px;
+      margin:0;
+      line-height:1.25;
+    }
+
+    /* FAB Balance */
+    .fab{
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      width: 56px;
+      height: 56px;
+      border-radius: 999px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      box-shadow: 0 16px 40px rgba(0,0,0,.45);
+      border: 1px solid rgba(45,212,191,.35);
+      background: linear-gradient(135deg, rgba(45,212,191,.95), rgba(99,102,241,.55));
+      color: #001014;
+      font-size: 22px;
+      font-weight: 900;
+      cursor: pointer;
+      z-index: 70;
+      user-select:none;
+    }
+    .fab:active{ transform: translateY(1px); }
+
+    /* Modal edición compra */
+    .modalOverlay{
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.55);
+      backdrop-filter: blur(2px);
+      display: none;
+      z-index: 80;
+    }
+    .modalOverlay.open{ display:block; }
+
+    .modal{
+      position: fixed;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: min(520px, 92vw);
+      background: rgba(15,26,46,.98);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      padding: 14px;
+      z-index: 90;
+      display: none;
+    }
+    .modal.open{ display:block; }
+    .modalHeader{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom: 8px;
+    }
+    .modalTitle{
+      margin:0;
+      font-size: 16px;
+      font-weight: 900;
+      color:#d6e3ff;
+    }
+
+    /* Confetti canvas */
+    #confettiCanvas{
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 200;
+      display:none;
+    }
+    #confettiCanvas.on{ display:block; }
   </style>
 </head>
 
 <body>
+  <canvas id="confettiCanvas"></canvas>
+
   <div class="wrap">
     <header>
       <h1>Shopping USA - Calculadora</h1>
@@ -163,21 +312,21 @@
 
         <div id="panelIndividual">
           <label>Importe (USD)</label>
-          <input id="usd" type="number" inputmode="decimal" step="0.01" placeholder="Ej: 150" />
+          <input id="usd" type="text" inputmode="decimal" placeholder="Ej: 150,00" />
 
           <div class="row">
             <div>
               <label>Descuento: sobre el artículo (%)</label>
-              <input id="d1" type="number" inputmode="decimal" step="0.01" placeholder="Ej: 50" />
+              <input id="d1" type="text" inputmode="decimal" placeholder="Ej: 50,00" />
             </div>
             <div>
               <label>Descuento: sobre el total de la factura (%)</label>
-              <input id="d2" type="number" inputmode="decimal" step="0.01" placeholder="Ej: 20" />
+              <input id="d2" type="text" inputmode="decimal" placeholder="Ej: 20,00" />
             </div>
           </div>
 
           <label>Impuesto / Sales tax (%)</label>
-          <input id="tax" type="number" inputmode="decimal" step="0.01" value="6.5" />
+          <input id="tax" type="text" inputmode="decimal" value="6,50" />
 
           <div class="btns">
             <button type="button" id="calcBtn">Calcular</button>
@@ -189,10 +338,10 @@
 
         <div id="panelCart" class="hidden">
           <label>Descuento: sobre el total de la factura (%)</label>
-          <input id="cartBillDiscount" type="number" inputmode="decimal" step="0.01" placeholder="Ej: 20" />
+          <input id="cartBillDiscount" type="text" inputmode="decimal" placeholder="Ej: 20,00" />
 
           <label>Impuesto / Sales tax (%)</label>
-          <input id="cartTax" type="number" inputmode="decimal" step="0.01" value="6.5" />
+          <input id="cartTax" type="text" inputmode="decimal" value="6,50" />
 
           <hr style="border:0;border-top:1px solid var(--border); margin: 14px 0;">
 
@@ -204,16 +353,16 @@
           <div class="row">
             <div>
               <label>Precio unitario (USD)</label>
-              <input id="itemUsd" type="number" inputmode="decimal" step="0.01" placeholder="Ej: 120" />
+              <input id="itemUsd" type="text" inputmode="decimal" placeholder="Ej: 120,00" />
             </div>
             <div>
               <label>Cantidad</label>
-              <input id="itemQty" type="number" inputmode="numeric" step="1" value="1" />
+              <input id="itemQty" type="text" inputmode="numeric" value="1" />
             </div>
           </div>
 
           <label>Descuento: sobre el artículo (%)</label>
-          <input id="itemDisc" type="number" inputmode="decimal" step="0.01" placeholder="Ej: 50" />
+          <input id="itemDisc" type="text" inputmode="decimal" placeholder="Ej: 50,00" />
 
           <div class="btns">
             <button type="button" id="addItemBtn">Agregar al carrito</button>
@@ -226,7 +375,6 @@
           </div>
 
           <div class="err" id="cartErr"></div>
-
           <div class="cartList" id="cartList"></div>
         </div>
       </div>
@@ -241,60 +389,100 @@
           <div class="kpi total"><div class="name">Total final (USD)</div><div class="val" id="r_totalUsd">—</div></div>
 
           <div class="kpi"><div class="name">Total en pesos (ARS)</div><div class="val" id="r_arsSelected">—</div></div>
-          <div class="kpi"><div class="name">Tipo de cambio usado</div><div class="val" id="r_rateUsed">—</div></div>
         </div>
 
-        <div class="small" id="ratesInfo">Tipos de cambio: —</div>
-        <div class="small" id="ratesStatus"></div>
+        <div class="small" id="rateInfo">Dólar oficial: —</div>
+        <div class="small" id="rateStatus"></div>
 
-        <hr style="border:0;border-top:1px solid var(--border); margin: 14px 0;">
-
-        <h2 style="margin:0 0 10px;">Tipo de cambio</h2>
-
-        <label>Usar para el cálculo</label>
-        <select id="rateMode">
-          <option value="blue" selected>Blue (default)</option>
-          <option value="mep">MEP</option>
-          <option value="oficial">Oficial</option>
-        </select>
-
-        <div class="row" style="margin-top: 10px;">
-          <div>
-            <label>Oficial</label>
-            <input id="rateOf" type="number" inputmode="decimal" step="0.01" placeholder="Cargando..." />
-          </div>
-          <div>
-            <label>Blue</label>
-            <input id="rateBl" type="number" inputmode="decimal" step="0.01" placeholder="Cargando..." />
-          </div>
+        <div class="btns" style="margin-top:12px;">
+          <button type="button" class="ghost" id="refreshRateBtn">Actualizar dólar oficial</button>
         </div>
 
-        <label>MEP</label>
-        <input id="rateMep" type="number" inputmode="decimal" step="0.01" placeholder="Cargando..." />
+        <label style="margin-top:14px;">Nota (se completa automáticamente)</label>
+        <input id="buyNote" type="text" placeholder="Ej: Carrito: AirPods, Cargador +1" />
 
         <div class="btns">
-          <button type="button" id="refreshRatesBtn">Actualizar</button>
+          <button type="button" id="buyBtn">¡Compré!</button>
         </div>
+
+        <div class="err" id="buyErr"></div>
       </div>
     </div>
+  </div>
+
+  <button class="fab" id="fabBalanceBtn" aria-label="Balance">💰</button>
+
+  <div class="drawerOverlay" id="drawerOverlay"></div>
+  <aside class="drawer" id="balanceDrawer" aria-label="Balance">
+    <div class="drawerHeader">
+      <h3 class="drawerTitle">Balance</h3>
+      <button type="button" class="ghost miniBtn" id="closeBalanceBtn">Cerrar</button>
+    </div>
+
+    <div class="kpi"><div class="name">Balance total (USD)</div><div class="val" id="bal_usd">—</div></div>
+    <div class="kpi"><div class="name">Balance total (ARS)</div><div class="val" id="bal_ars">—</div></div>
+    <div class="kpi"><div class="name">Compras registradas</div><div class="val" id="bal_count">—</div></div>
+
+    <div class="btns" style="margin-top:12px;">
+      <button type="button" class="danger" id="resetBalanceBtn">Reset balance</button>
+    </div>
+
+    <div class="history" id="historyList"></div>
+  </aside>
+
+  <div class="modalOverlay" id="editOverlay"></div>
+  <div class="modal" id="editModal" role="dialog" aria-label="Editar compra">
+    <div class="modalHeader">
+      <h4 class="modalTitle">Editar compra</h4>
+      <button type="button" class="ghost miniBtn" id="editCloseBtn">Cerrar</button>
+    </div>
+
+    <div class="small" id="editHint"></div>
+
+    <label>Nota</label>
+    <input id="editNote" type="text" />
+
+    <div class="row">
+      <div>
+        <label>Total (USD)</label>
+        <input id="editUsd" type="text" inputmode="decimal" />
+      </div>
+      <div>
+        <label>Total (ARS)</label>
+        <input id="editArs" type="text" inputmode="decimal" />
+      </div>
+    </div>
+
+    <div class="btns">
+      <button type="button" id="editSaveBtn">Guardar cambios</button>
+      <button type="button" class="danger" id="editDeleteBtn">Eliminar</button>
+    </div>
+
+    <div class="err" id="editErr"></div>
   </div>
 
 <script>
   const $ = (id) => document.getElementById(id);
 
-  const fmtUsd = (n) => isFinite(n) ? n.toLocaleString("en-US", { style:"currency", currency:"USD" }) : "—";
-  const fmtArs = (n) => isFinite(n) ? n.toLocaleString("es-AR", { style:"currency", currency:"ARS", maximumFractionDigits: 0 }) : "—";
+  const fmt2 = (n) =>
+    isFinite(n) ? n.toLocaleString("es-AR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "—";
+  const fmtUsd = (n) => isFinite(n) ? `USD ${fmt2(n)}` : "—";
+  const fmtArs = (n) => isFinite(n) ? `ARS ${fmt2(n)}` : "—";
 
-  const KEY_RATES = "shopping_calc_rates_v8";
-  const KEY_MODE  = "shopping_calc_rate_mode_v1";
+  const TZ_AR = "America/Argentina/Buenos_Aires";
+
   const KEY_UI_MODE = "shopping_calc_ui_mode_v1";
-  const KEY_CART = "shopping_calc_cart_v4";
+  const KEY_CART = "shopping_calc_cart_v10";
 
-  let memRates = null;
-  let autoSaveTimer = null;
+  const KEY_RATE_OFICIAL = "shopping_calc_rate_oficial_v1";
+  const KEY_RATE_STAMP = "shopping_calc_rate_oficial_stamp_v1";
+
+  const KEY_BALANCE = "shopping_calc_balance_v5";
 
   let cart = [];
   let cartEditingId = null;
+  let lastCalc = null;
+  let editingPurchaseId = null;
 
   function uuid(){ return Math.random().toString(16).slice(2) + "-" + Date.now().toString(16); }
 
@@ -305,117 +493,252 @@
     el.textContent = msg;
   }
 
-  function setStatus(msg){ $("ratesStatus").textContent = msg || ""; }
+  function setStatus(msg){ $("rateStatus").textContent = msg || ""; }
+
+  function parseLocalNumber(raw){
+    const s0 = String(raw ?? "").trim();
+    if(!s0) return NaN;
+
+    let s = s0.replace(/\s/g, "");
+
+    if(s.includes(",")){
+      s = s.replace(/\./g, "");
+      s = s.replace(",", ".");
+      return Number(s);
+    }
+    return Number(s);
+  }
 
   function readNum(id){
-    const v = parseFloat($(id).value);
-    return isFinite(v) ? v : 0;
+    const n = parseLocalNumber($(id).value);
+    return isFinite(n) ? n : 0;
   }
 
-  // ---- Rates ----
-  function getRates(){
-    try{
-      const data = localStorage.getItem(KEY_RATES);
-      if(!data) return memRates;
-      return JSON.parse(data);
-    } catch { return memRates; }
+  function readNumOrNaN(id){
+    return parseLocalNumber($(id).value);
   }
-  function setRates(r){
-    memRates = r;
-    try{ localStorage.setItem(KEY_RATES, JSON.stringify(r)); } catch {}
+
+  function escapeHtml(s){
+    return String(s)
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
   }
-  function renderRatesInfo(){
-    const r = getRates();
-    $("ratesInfo").textContent = r ? `Oficial ${r.oficial} · Blue ${r.blue} · MEP ${r.mep}` : "Tipos de cambio: (sin datos aún)";
+
+  // --- Drawer (FAB abre/cierra) ---
+  function isDrawerOpen(){ return $("balanceDrawer").classList.contains("open"); }
+  function openDrawer(){
+    $("drawerOverlay").classList.add("open");
+    $("balanceDrawer").classList.add("open");
   }
-  function ratesFromInputs(){
-    const oficial = parseFloat($("rateOf").value);
-    const blue = parseFloat($("rateBl").value);
-    const mep = parseFloat($("rateMep").value);
-    if(!isFinite(oficial) || !isFinite(blue) || !isFinite(mep)) return null;
-    return { oficial, blue, mep };
+  function closeDrawer(){
+    $("drawerOverlay").classList.remove("open");
+    $("balanceDrawer").classList.remove("open");
   }
-  function pushRatesToInputs(r){
-    $("rateOf").value = r?.oficial ?? "";
-    $("rateBl").value = r?.blue ?? "";
-    $("rateMep").value = r?.mep ?? "";
+  function toggleDrawer(){
+    if(isDrawerOpen()) closeDrawer();
+    else { renderBalance(); openDrawer(); }
   }
-  function loadRateMode(){
-    try{ $("rateMode").value = localStorage.getItem(KEY_MODE) || "blue"; }
-    catch { $("rateMode").value = "blue"; }
+
+  // --- Modal edición ---
+  function openEditModal(){
+    $("editOverlay").classList.add("open");
+    $("editModal").classList.add("open");
   }
-  function persistRateMode(mode){
-    try{ localStorage.setItem(KEY_MODE, mode); } catch {}
+  function closeEditModal(){
+    $("editOverlay").classList.remove("open");
+    $("editModal").classList.remove("open");
+    editingPurchaseId = null;
+    showErr("editErr", "");
   }
-  function pickRate(rates, mode){
-    if(!rates) return { label: "—", value: NaN };
-    if(mode === "oficial") return { label: "Oficial", value: Number(rates.oficial) };
-    if(mode === "mep") return { label: "MEP", value: Number(rates.mep) };
-    return { label: "Blue", value: Number(rates.blue) };
-  }
-  function formatUpdateStamp(isoString){
+
+  // --- Fecha AR ---
+  function formatStampArgentina(isoString){
     const d = new Date(isoString);
     if(isNaN(d.getTime())) return null;
-    return d.toLocaleString("es-AR", { day:"2-digit", month:"2-digit", year:"numeric", hour:"2-digit", minute:"2-digit", hourCycle:"h23" });
+    return d.toLocaleString("es-AR", {
+      timeZone: TZ_AR,
+      day:"2-digit", month:"2-digit", year:"numeric",
+      hour:"2-digit", minute:"2-digit",
+      hourCycle:"h23"
+    });
   }
-  async function fetchOne(endpoint){
-    const url = `https://dolarapi.com/v1/dolares/${endpoint}`;
-    const res = await fetch(url, { cache: "no-store" });
-    if(!res.ok) throw new Error(`HTTP ${res.status}`);
-    return res.json();
+
+  function nowIso(){ return new Date().toISOString(); }
+  function nowArgentina(){
+    return new Date().toLocaleString("es-AR", {
+      timeZone: TZ_AR,
+      day:"2-digit", month:"2-digit", year:"numeric",
+      hour:"2-digit", minute:"2-digit",
+      hourCycle:"h23"
+    });
   }
-  async function refreshRatesFromInternet(){
-    setStatus("Actualizando tipo de cambio...");
+
+  // --- Rate ---
+  function getRateOficial(){
     try{
-      const [of, bl, mep] = await Promise.all([ fetchOne("oficial"), fetchOne("blue"), fetchOne("bolsa") ]);
-      const rates = { oficial: Number(of.venta), blue: Number(bl.venta), mep: Number(mep.venta) };
-      if(!isFinite(rates.oficial) || !isFinite(rates.blue) || !isFinite(rates.mep)) throw new Error("Bad numbers");
+      const raw = localStorage.getItem(KEY_RATE_OFICIAL);
+      const n = raw ? Number(raw) : NaN;
+      return isFinite(n) ? n : NaN;
+    } catch { return NaN; }
+  }
+  function setRateOficial(value, isoStamp){
+    try{
+      localStorage.setItem(KEY_RATE_OFICIAL, String(value));
+      if(isoStamp) localStorage.setItem(KEY_RATE_STAMP, String(isoStamp));
+    } catch {}
+  }
+  function getRateStamp(){
+    try{ return localStorage.getItem(KEY_RATE_STAMP) || ""; } catch { return ""; }
+  }
+  function renderRateInfo(){
+    const r = getRateOficial();
+    $("rateInfo").textContent = isFinite(r) ? `Dólar oficial: ${fmt2(r)}` : "Dólar oficial: (sin datos aún)";
+    const stamp = formatStampArgentina(getRateStamp());
+    setStatus(stamp ? `Actualizado al ${stamp}` : "");
+  }
+  async function refreshRateFromInternet(){
+    setStatus("Actualizando dólar oficial...");
+    try{
+      const url = "https://dolarapi.com/v1/dolares/oficial";
+      const res = await fetch(url, { cache: "no-store" });
+      if(!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
 
-      pushRatesToInputs(rates);
-      setRates(rates);
-      renderRatesInfo();
+      const rate = Number(data.venta);
+      if(!isFinite(rate)) throw new Error("Bad rate");
 
-      const iso = bl.fechaActualizacion || of.fechaActualizacion || mep.fechaActualizacion;
-      const stamp = formatUpdateStamp(iso);
-      setStatus(stamp ? `Tipo de cambio actualizado al ${stamp}` : "Tipo de cambio actualizado");
-
+      setRateOficial(rate, data.fechaActualizacion);
+      renderRateInfo();
       recalcActiveMode();
     } catch {
-      setStatus("No se pudo actualizar (quedaron los valores previos).");
+      setStatus("No se pudo actualizar (quedó el valor previo).");
+      renderRateInfo();
+      recalcActiveMode();
     }
   }
-  function scheduleAutoSaveRates(){
-    if(autoSaveTimer) clearTimeout(autoSaveTimer);
-    autoSaveTimer = setTimeout(() => {
-      const r = ratesFromInputs();
-      if(!r) return;
-      setRates(r);
-      renderRatesInfo();
-      recalcActiveMode();
-    }, 350);
+
+  // --- Confetti (billetes) ---
+  function startMoneyConfetti(){
+    const canvas = $("confettiCanvas");
+    const ctx = canvas.getContext("2d");
+    const DPR = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+
+    const resize = () => {
+      canvas.width = Math.floor(window.innerWidth * DPR);
+      canvas.height = Math.floor(window.innerHeight * DPR);
+      canvas.style.width = window.innerWidth + "px";
+      canvas.style.height = window.innerHeight + "px";
+      ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    };
+
+    resize();
+    canvas.classList.add("on");
+
+    const W = window.innerWidth;
+    const H = window.innerHeight;
+
+    const emojis = ["💵","💸","🧾"]; // “billetes”/dinero
+    const N = 36;
+    const parts = [];
+
+    const rand = (a,b) => a + Math.random()*(b-a);
+
+    for(let i=0;i<N;i++){
+      parts.push({
+        x: W/2 + rand(-18, 18),
+        y: H - 30 + rand(-10, 10),
+        vx: rand(-3.2, 3.2),
+        vy: rand(-11.5, -7.5),
+        g: rand(0.22, 0.34),
+        rot: rand(-0.25, 0.25),
+        vr: rand(-0.08, 0.08),
+        life: rand(70, 110),
+        size: rand(18, 30),
+        t: 0,
+        emo: emojis[Math.floor(Math.random()*emojis.length)]
+      });
+    }
+
+    let rafId = null;
+    function frame(){
+      ctx.clearRect(0,0,W,H);
+
+      let alive = 0;
+      for(const p of parts){
+        p.t += 1;
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += p.g;
+        p.rot += p.vr;
+
+        const alpha = Math.max(0, 1 - (p.t / p.life));
+        if(alpha > 0.02){
+          alive++;
+          ctx.save();
+          ctx.globalAlpha = alpha;
+          ctx.translate(p.x, p.y);
+          ctx.rotate(p.rot);
+          ctx.font = `${Math.floor(p.size)}px system-ui, Segoe UI Emoji, Apple Color Emoji, Noto Color Emoji`;
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.fillText(p.emo, 0, 0);
+          ctx.restore();
+        }
+      }
+
+      if(alive > 0){
+        rafId = requestAnimationFrame(frame);
+      } else {
+        cancelAnimationFrame(rafId);
+        canvas.classList.remove("on");
+        ctx.clearRect(0,0,W,H);
+      }
+    }
+
+    rafId = requestAnimationFrame(frame);
+
+    // cleanup: si rota o cambia tamaño
+    const onResize = () => resize();
+    window.addEventListener("resize", onResize, { passive:true, once:true });
   }
 
-  // ---- Shared totals render ----
-  function renderTotals({ usd0, usdAfterDiscounts, taxUsd, totalUsd }){
+  // --- Totals + nota ---
+  function renderTotals({ mode, usd0, usdAfterDiscounts, taxUsd, totalUsd }){
     $("r_usd0").textContent = fmtUsd(usd0);
     $("r_usdDisc").textContent = fmtUsd(usdAfterDiscounts);
     $("r_taxUsd").textContent = fmtUsd(taxUsd);
     $("r_totalUsd").textContent = fmtUsd(totalUsd);
 
-    const rates = getRates();
-    const mode = $("rateMode").value || "blue";
-    const picked = pickRate(rates, mode);
-
-    if(isFinite(picked.value)){
-      $("r_arsSelected").textContent = fmtArs(totalUsd * picked.value);
-      $("r_rateUsed").textContent = `${picked.label} (${picked.value})`;
+    const rate = getRateOficial();
+    if(isFinite(rate)){
+      $("r_arsSelected").textContent = fmtArs(totalUsd * rate);
+      lastCalc = { mode, usd0, usdAfterDiscounts, taxUsd, totalUsd, rateOficial: rate, totalArs: totalUsd * rate };
     } else {
       $("r_arsSelected").textContent = "—";
-      $("r_rateUsed").textContent = "—";
+      lastCalc = { mode, usd0, usdAfterDiscounts, taxUsd, totalUsd, rateOficial: NaN, totalArs: NaN };
     }
+
+    if(!$("buyNote").value.trim()) $("buyNote").value = buildAutoNote();
   }
 
-  // ---- Individual ----
+  function buildAutoNote(){
+    const isCart = $("mode_cart").checked;
+    if(isCart){
+      if(cart.length === 0) return "Carrito";
+      const names = cart.map(x => (x.desc || "").trim()).filter(Boolean);
+      const head = names.slice(0, 3);
+      const rest = Math.max(0, names.length - head.length);
+      return `Carrito: ${head.join(", ")}${rest > 0 ? ` +${rest}` : ""}`;
+    }
+    const u = readNumOrNaN("usd");
+    if(isFinite(u) && u > 0) return `Individual: ${fmtUsd(u)}`;
+    return "Individual";
+  }
+
+  // --- Individual ---
   function computeIndividual(){
     showErr("err", "");
 
@@ -432,18 +755,18 @@
     const taxUsd = usdAfterD2 * (tax/100);
     const totalUsd = usdAfterD2 + taxUsd;
 
-    renderTotals({ usd0, usdAfterDiscounts: usdAfterD2, taxUsd, totalUsd });
+    renderTotals({ mode:"individual", usd0, usdAfterDiscounts: usdAfterD2, taxUsd, totalUsd });
   }
 
-  // ---- Cart persistence ----
+  // --- Cart persistence ---
   function loadCart(){
     try{
       const raw = localStorage.getItem(KEY_CART);
       if(!raw) return;
       const data = JSON.parse(raw);
       cart = Array.isArray(data?.items) ? data.items : [];
-      if(isFinite(Number(data?.billDiscount))) $("cartBillDiscount").value = data.billDiscount;
-      if(isFinite(Number(data?.tax))) $("cartTax").value = data.tax;
+      if(data?.billDiscount != null) $("cartBillDiscount").value = String(data.billDiscount).replace(".", ",");
+      if(data?.tax != null) $("cartTax").value = String(data.tax).replace(".", ",");
     } catch { cart = []; }
   }
   function saveCart(){
@@ -453,11 +776,6 @@
     } catch {}
   }
 
-  function escapeHtml(s){
-    return String(s).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");
-  }
-
-  // ---- Pro-rate logic ----
   function calcCartLinesWithProration(){
     const lines = cart.map(it => {
       const qty = Number(it.qty)||0;
@@ -506,18 +824,9 @@
       const itemDiscPct = Number(l.disc) || 0;
 
       const step1 = `${l.qty} × ${fmtUsd(l.unit)}`;
+      const step2 = (itemDiscPct > 0) ? `${fmtUsd(l.unitAfterItemDisc)} (${fmt2(itemDiscPct)}%)` : "";
+      const step3 = (billDiscPct > 0) ? `${fmtUsd(l.unitEffective)} (${fmt2(billDiscPct)}%)` : "";
 
-      // Si NO hay descuento ítem: omitimos este paso entero (no mostramos "→ $90.00")
-      const step2 = (itemDiscPct > 0)
-        ? `${fmtUsd(l.unitAfterItemDisc)} (${itemDiscPct}%)`
-        : "";
-
-      // Si NO hay descuento factura: omitimos este paso entero (no mostramos "→ $60.00")
-      const step3 = (billDiscPct > 0)
-        ? `${fmtUsd(l.unitEffective)} (${billDiscPct}%)`
-        : "";
-
-      // armamos solo con los pasos que existan y unimos con flechitas [web:254][web:258]
       const detail = [step1, step2, step3].filter(Boolean).join(" → ");
 
       el.innerHTML = `
@@ -541,9 +850,9 @@
     if(!it) return;
     cartEditingId = id;
     $("itemDesc").value = it.desc || "";
-    $("itemUsd").value = it.usd ?? "";
-    $("itemQty").value = it.qty ?? 1;
-    $("itemDisc").value = it.disc ?? "";
+    $("itemUsd").value = String(it.usd ?? "").replace(".", ",");
+    $("itemQty").value = String(it.qty ?? 1);
+    $("itemDisc").value = String(it.disc ?? "").replace(".", ",");
     $("addItemBtn").textContent = "Guardar cambios";
   }
 
@@ -551,7 +860,7 @@
     cartEditingId = null;
     $("itemDesc").value = "";
     $("itemUsd").value = "";
-    $("itemQty").value = 1;
+    $("itemQty").value = "1";
     $("itemDisc").value = "";
     $("addItemBtn").textContent = "Agregar al carrito";
   }
@@ -560,27 +869,28 @@
     showErr("cartErr", "");
 
     const desc = $("itemDesc").value.trim();
-    const usd = parseFloat($("itemUsd").value);
+    const usd = readNum("itemUsd");
     const qty = parseInt($("itemQty").value, 10);
-    const disc = parseFloat($("itemDisc").value);
+    const disc = readNum("itemDisc");
 
     if(!desc){ showErr("cartErr", "Poné una descripción (aunque sea corta)."); return; }
     if(!isFinite(usd) || usd <= 0){ showErr("cartErr", "Precio unitario USD inválido."); return; }
     if(!Number.isInteger(qty) || qty <= 0){ showErr("cartErr", "Cantidad inválida."); return; }
-    const discOk = isFinite(disc) ? disc : 0;
-    if(discOk < 0){ showErr("cartErr", "Descuento del artículo no puede ser negativo."); return; }
+    if(disc < 0){ showErr("cartErr", "Descuento del artículo no puede ser negativo."); return; }
 
     if(cartEditingId){
       const it = cart.find(x => x.id === cartEditingId);
-      if(it){ it.desc = desc; it.usd = usd; it.qty = qty; it.disc = discOk; }
+      if(it){ it.desc = desc; it.usd = usd; it.qty = qty; it.disc = disc; }
     } else {
-      cart.push({ id: uuid(), desc, usd, qty, disc: discOk });
+      cart.push({ id: uuid(), desc, usd, qty, disc });
     }
 
     saveCart();
     renderCartList();
     recalcCart();
     cancelEdit();
+
+    if(!$("buyNote").value.trim()) $("buyNote").value = buildAutoNote();
   }
 
   function deleteItem(id){
@@ -589,6 +899,7 @@
     renderCartList();
     recalcCart();
     if(cartEditingId === id) cancelEdit();
+    if(!$("buyNote").value.trim()) $("buyNote").value = buildAutoNote();
   }
 
   function clearCart(){
@@ -597,6 +908,7 @@
     renderCartList();
     recalcCart();
     cancelEdit();
+    if(!$("buyNote").value.trim()) $("buyNote").value = buildAutoNote();
   }
 
   function recalcCart(){
@@ -607,18 +919,196 @@
     if(billDiscount < 0 || tax < 0){ showErr("cartErr", "Descuento factura e impuesto no pueden ser negativos."); return; }
 
     const usd0 = cart.reduce((sum, it) => sum + (Number(it.usd)||0) * (Number(it.qty)||0), 0);
-
     const { afterBill } = calcCartLinesWithProration();
     const usdAfterDiscounts = afterBill;
 
     const taxUsd = usdAfterDiscounts * (tax/100);
     const totalUsd = usdAfterDiscounts + taxUsd;
 
-    renderTotals({ usd0, usdAfterDiscounts, taxUsd, totalUsd });
+    renderTotals({ mode:"cart", usd0, usdAfterDiscounts, taxUsd, totalUsd });
     saveCart();
   }
 
-  // ---- UI mode ----
+  // --- Balance storage ---
+  function loadBalance(){
+    try{
+      const raw = localStorage.getItem(KEY_BALANCE);
+      if(!raw) return [];
+      const arr = JSON.parse(raw);
+      return Array.isArray(arr) ? arr : [];
+    } catch { return []; }
+  }
+  function saveBalance(items){
+    try{ localStorage.setItem(KEY_BALANCE, JSON.stringify(items)); } catch {}
+  }
+  function calcBalanceTotals(items){
+    const usd = items.reduce((s,x) => s + (Number(x.totalUsd)||0), 0);
+    const ars = items.reduce((s,x) => s + (Number(x.totalArs)||0), 0);
+    return { usd, ars, count: items.length };
+  }
+  function compactWhen(whenStr){ return String(whenStr || "").replace(",", "").trim(); }
+
+  function renderBalance(){
+    const items = loadBalance();
+    const totals = calcBalanceTotals(items);
+
+    $("bal_usd").textContent = fmtUsd(totals.usd);
+    $("bal_ars").textContent = fmtArs(totals.ars);
+    $("bal_count").textContent = String(totals.count);
+
+    const hist = $("historyList");
+    hist.innerHTML = "";
+
+    if(items.length === 0){
+      const empty = document.createElement("div");
+      empty.className = "small";
+      empty.textContent = "Todavía no registraste compras.";
+      hist.appendChild(empty);
+      return;
+    }
+
+    const last = [...items].sort((a,b) => (b.ts || 0) - (a.ts || 0)).slice(0, 14);
+
+    last.forEach(x => {
+      const box = document.createElement("div");
+      box.className = "historyItem";
+
+      const note = (x.note || "").trim() || (x.mode === "cart" ? "Carrito" : "Individual");
+      const when = compactWhen(x.when || "");
+      const line = `${escapeHtml(note)} · ${escapeHtml(when)} · ${fmtUsd(Number(x.totalUsd)||0)} | ${fmtArs(Number(x.totalArs)||0)}`;
+
+      box.innerHTML = `
+        <div class="historyTop">
+          <div style="min-width:0;">
+            <p class="historyTitle">${line}</p>
+          </div>
+          <div class="cartActions">
+            <button class="ghost miniBtn" data-action="editBuy" data-id="${x.id}">Editar</button>
+            <button class="miniBtn danger" data-action="delBuy" data-id="${x.id}">Eliminar</button>
+          </div>
+        </div>
+      `;
+      hist.appendChild(box);
+    });
+  }
+
+  // --- Detección de "duplicado" antes de agregar ---
+  function normalizeNote(s){
+    return String(s || "")
+      .trim()
+      .replace(/\s+/g, " ")
+      .toLowerCase();
+  }
+
+  function isLikelyDuplicate(newItem, existing){
+    // Tolerancia: misma nota + totalUsd casi igual + dentro de 10 minutos
+    const NOTE_EQ = normalizeNote(existing.note) === normalizeNote(newItem.note);
+    const USD_EQ = Math.abs((Number(existing.totalUsd)||0) - (Number(newItem.totalUsd)||0)) < 0.01;
+    const TIME_CLOSE = Math.abs((Number(existing.ts)||0) - (Number(newItem.ts)||0)) < (10 * 60 * 1000);
+    return NOTE_EQ && USD_EQ && TIME_CLOSE;
+  }
+
+  function addPurchaseFromLastCalc(){
+    showErr("buyErr", "");
+
+    if(!lastCalc || !isFinite(Number(lastCalc.totalUsd)) || lastCalc.totalUsd <= 0){
+      showErr("buyErr", "Primero calculá un total (individual o carrito) antes de registrar la compra.");
+      return;
+    }
+
+    const note = $("buyNote").value.trim() || buildAutoNote();
+
+    const item = {
+      id: uuid(),
+      ts: Date.now(),
+      iso: nowIso(),
+      when: nowArgentina(),
+      mode: lastCalc.mode,
+      totalUsd: Number(lastCalc.totalUsd),
+      totalArs: Number(lastCalc.totalArs),
+      rateOficial: Number(lastCalc.rateOficial),
+      note
+    };
+
+    const items = loadBalance();
+
+    // Si detecta posible duplicado, pide confirmación nativa (igual que reset) [web:445]
+    const dup = items.find(x => isLikelyDuplicate(item, x));
+    if(dup){
+      const ok = confirm("Parece que ya agregaste una compra igual hace poco.\n\n¿Querés agregarla igual?");
+      if(!ok) return;
+    }
+
+    items.push(item);
+    saveBalance(items);
+
+    $("buyNote").value = "";
+    renderBalance();
+
+    // Celebración
+    startMoneyConfetti();
+  }
+
+  function deletePurchase(id){
+    const items = loadBalance().filter(x => x.id !== id);
+    saveBalance(items);
+    renderBalance();
+  }
+
+  function startEditPurchase(id){
+    const items = loadBalance();
+    const it = items.find(x => x.id === id);
+    if(!it) return;
+
+    editingPurchaseId = id;
+    showErr("editErr", "");
+
+    $("editHint").textContent = `${(it.mode === "cart" ? "Carrito" : "Individual")} · ${compactWhen(it.when || "")}`;
+    $("editNote").value = it.note || "";
+    $("editUsd").value = String(it.totalUsd ?? "").replace(".", ",");
+    $("editArs").value = String(it.totalArs ?? "").replace(".", ",");
+
+    $("editOverlay").classList.add("open");
+    $("editModal").classList.add("open");
+  }
+
+  function closeEditModal(){
+    $("editOverlay").classList.remove("open");
+    $("editModal").classList.remove("open");
+    editingPurchaseId = null;
+    showErr("editErr", "");
+  }
+
+  function saveEditedPurchase(){
+    showErr("editErr", "");
+    if(!editingPurchaseId) return;
+
+    const note = $("editNote").value.trim();
+    const totalUsd = parseLocalNumber($("editUsd").value);
+    const totalArs = parseLocalNumber($("editArs").value);
+
+    if(!note){ showErr("editErr", "La nota no puede quedar vacía."); return; }
+    if(!isFinite(totalUsd) || totalUsd <= 0){ showErr("editErr", "Total USD inválido."); return; }
+    if(!isFinite(totalArs) || totalArs < 0){ showErr("editErr", "Total ARS inválido."); return; }
+
+    const items = loadBalance();
+    const idx = items.findIndex(x => x.id === editingPurchaseId);
+    if(idx < 0){ showErr("editErr", "No se encontró el ítem."); return; }
+
+    items[idx] = { ...items[idx], note, totalUsd, totalArs };
+    saveBalance(items);
+    renderBalance();
+    closeEditModal();
+  }
+
+  function resetBalance(){
+    const ok = confirm("¿Seguro que querés borrar TODO el historial de compras?");
+    if(!ok) return;
+    saveBalance([]);
+    renderBalance();
+  }
+
+  // --- UI mode ---
   function setUiMode(mode){
     const isCart = mode === "cart";
     $("panelIndividual").classList.toggle("hidden", isCart);
@@ -626,7 +1116,9 @@
     $("leftTitle").textContent = isCart ? "Carrito" : "Precio y descuentos";
     try { localStorage.setItem(KEY_UI_MODE, mode); } catch {}
     recalcActiveMode();
+    if(!$("buyNote").value.trim()) $("buyNote").value = buildAutoNote();
   }
+
   function loadUiMode(){
     try{
       const m = localStorage.getItem(KEY_UI_MODE) || "individual";
@@ -634,12 +1126,13 @@
       else { $("mode_ind").checked = true; setUiMode("individual"); }
     } catch { setUiMode("individual"); }
   }
+
   function recalcActiveMode(){
     const mode = $("mode_cart").checked ? "cart" : "individual";
     if(mode === "cart"){ renderCartList(); recalcCart(); }
   }
 
-  // ---- Wiring ----
+  // --- Wiring ---
   $("mode_ind").addEventListener("change", () => setUiMode("individual"));
   $("mode_cart").addEventListener("change", () => setUiMode("cart"));
 
@@ -649,7 +1142,8 @@
     showErr("err", "");
     $("r_usd0").textContent = $("r_usdDisc").textContent = $("r_taxUsd").textContent = $("r_totalUsd").textContent = "—";
     $("r_arsSelected").textContent = "—";
-    $("r_rateUsed").textContent = "—";
+    lastCalc = null;
+    if(!$("buyNote").value.trim()) $("buyNote").value = buildAutoNote();
   });
 
   $("addItemBtn").addEventListener("click", upsertItemFromForm);
@@ -669,21 +1163,42 @@
     if(action === "del") deleteItem(id);
   });
 
-  $("rateMode").addEventListener("change", (e) => { persistRateMode(e.target.value); recalcActiveMode(); });
-  $("refreshRatesBtn").addEventListener("click", refreshRatesFromInternet);
-  ["rateOf","rateBl","rateMep"].forEach(id => $(id).addEventListener("input", scheduleAutoSaveRates));
+  $("refreshRateBtn").addEventListener("click", refreshRateFromInternet);
+  $("buyBtn").addEventListener("click", addPurchaseFromLastCalc);
 
-  // ---- Init ----
-  loadRateMode();
+  $("fabBalanceBtn").addEventListener("click", toggleDrawer);
+  $("closeBalanceBtn").addEventListener("click", closeDrawer);
+  $("drawerOverlay").addEventListener("click", closeDrawer);
+
+  $("resetBalanceBtn").addEventListener("click", resetBalance);
+
+  $("historyList").addEventListener("click", (e) => {
+    const btn = e.target.closest("button[data-action]");
+    if(!btn) return;
+    const id = btn.getAttribute("data-id");
+    const action = btn.getAttribute("data-action");
+    if(action === "delBuy") deletePurchase(id);
+    if(action === "editBuy") startEditPurchase(id);
+  });
+
+  $("editCloseBtn").addEventListener("click", closeEditModal);
+  $("editOverlay").addEventListener("click", closeEditModal);
+  $("editSaveBtn").addEventListener("click", saveEditedPurchase);
+  $("editDeleteBtn").addEventListener("click", () => {
+    if(!editingPurchaseId) return;
+    const ok = confirm("¿Eliminar esta compra?");
+    if(!ok) return;
+    deletePurchase(editingPurchaseId);
+    closeEditModal();
+  });
+
+  // Init
   loadCart();
   renderCartList();
-  renderRatesInfo();
   loadUiMode();
-
-  const savedRates = getRates();
-  if(savedRates) pushRatesToInputs(savedRates);
-
-  refreshRatesFromInternet();
+  renderRateInfo();
+  renderBalance();
+  if(!$("buyNote").value.trim()) $("buyNote").value = buildAutoNote();
+  refreshRateFromInternet();
 </script>
-</body>
-</html>
+</
